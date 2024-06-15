@@ -1,5 +1,7 @@
 import { cart } from "../data/cart.js";
 import { products } from "../data/products.js";
+import { moneyCurrency } from './utils/money.js';
+
 
 renderOrder();
 function renderOrder(){
@@ -30,7 +32,7 @@ function renderOrder(){
                   ${matchedProduct.name}
                 </div>
                 <div class="product-price">
-                  $${Number(matchedProduct.priceCents/100) * item.quantity}
+                  $${moneyCurrency(matchedProduct.priceCents)}
                 </div>
                 <div class="product-quantity">
                   <span>

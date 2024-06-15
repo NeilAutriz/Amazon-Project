@@ -1,6 +1,6 @@
 import {cart, pushToCart} from '../data/cart.js';
 import { products } from '../data/products.js';
-
+import { moneyCurrency } from './utils/money.js';
 
 function renderProducts(){
     let productHTML = document.querySelector('.js-product-grid');
@@ -27,7 +27,7 @@ function renderProducts(){
             </div>
     
             <div class="product-price">
-                $${(product.priceCents/100).toFixed(2)}
+                $${moneyCurrency(product.priceCents)}
             </div>
     
             <div class="product-quantity-container">
