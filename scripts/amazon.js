@@ -1,4 +1,5 @@
-import {cart} from '../data/cart.js';
+import {cart, pushToCart} from '../data/cart.js';
+import { products } from '../data/products.js';
 
 
 function renderProducts(){
@@ -59,52 +60,32 @@ function renderProducts(){
         `
     });
     productHTML.innerHTML = renderHTML; 
-    addToCart();
+    addButton();
 }
 
-function addToCart(){
+function addButton(){
     const addCartButton = document.querySelectorAll('.js-add-button');
+    
     addCartButton.forEach((button) => {
         let cartProductId = button.dataset.productId;
         let cartProductPrice = (button.dataset.productPrice/100).toFixed(2);
+
         button.addEventListener('click', () => {
-            let addedProduct;
-            cart.forEach((currentProduct) => {
-                if(currentProduct.id === cartProductId){
-                    addedProduct = currentProduct;
-                }
-            })
-            if(addedProduct){
-                addedProduct.quantity++;
-            } else {
-                cart.push({id: cartProductId, 
-                    quantity: 1, 
-                    price: cartProductPrice});
-            }
-            totalQuantity();
-        })
+            pushToCart(cartProductId, cartProductPrice);
+            updateCartQuantity();
+        });
     })
 }
 
-function totalQuantity(){
+function updateCartQuantity(){
     const cartQuantityDisplay = document.querySelector('.js-cart-quantity');  // line 91
-    let totalQuantity = 0;
+    let updateCartQuantity = 0;
 
-    cart.forEach((product) => {
-        totalQuantity += Number(product.quantity);
+    cart.forEach((currentCartProduct) => {
+        updateCartQuantity += Number(currentCartProduct.quantity);
     })
 
-    cartQuantityDisplay.innerHTML = totalQuantity;
-}
-
-
-function totalPrice(){
-    let totalPrice = 0;
-
-    cart.forEach((product) => {
-        totalPrice += Number(product.price) * Number(product.quantity);
-    })
-    totalPrice = totalPrice.toFixed(2);
+    cartQuantityDisplay.innerHTML = updateCartQuantity;
 }
 
 renderProducts();
