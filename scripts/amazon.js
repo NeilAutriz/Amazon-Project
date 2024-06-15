@@ -51,31 +51,58 @@ function renderProducts(){
             </div>
     
             <button class="add-to-cart-button button-primary js-add-button" 
-            data-product-id="${product.id}">
+            data-product-id="${product.id}" data-product-price="${product.priceCents}">
             Add to Cart
             </button>
         </div>
         `
     });
     productHTML.innerHTML = renderHTML; 
+    addToCart();
 }
 
-const addCartButton = document.querySelectorAll('.js-add-button');
-addCartButton.forEach((button) => {
-    let cartProductId = button.dataset.productId;
-    button.addEventListener('click', () => {
-        let addedProduct;
-        cart.forEach((currentProduct) => {
-            if(currentProduct.id === cartProductId){
-                addedProduct = currentProduct;
+function addToCart(){
+    const addCartButton = document.querySelectorAll('.js-add-button');
+    addCartButton.forEach((button) => {
+        let cartProductId = button.dataset.productId;
+        let cartProductPrice = (button.dataset.productPrice/100).toFixed(2);
+        button.addEventListener('click', () => {
+            let addedProduct;
+            cart.forEach((currentProduct) => {
+                if(currentProduct.id === cartProductId){
+                    addedProduct = currentProduct;
+                }
+            })
+            if(addedProduct){
+                addedProduct.quantity++;
+            } else {
+                cart.push({id: cartProductId, 
+                    quantity: 1, 
+                    price: cartProductPrice});
             }
+            totalQuantity();
         })
-        if(addedProduct){
-            addedProduct.quantity++;
-        } else {
-            cart.push({id: cartProductId, 
-                quantity: 1});
-        }
-        console.log(cart);
     })
-})
+}
+
+function totalQuantity(){
+    cartQuantityDisplay = document.querySelector('.js-cart-quantity');
+    let totalQuantity = 0;
+
+    cart.forEach((product) => {
+        totalQuantity += Number(product.quantity);
+    })
+
+    cartQuantityDisplay.innerHTML = totalQuantity;
+
+}
+
+function totalPrice(){
+    let totalPrice = 0;
+
+    cart.forEach((product) => {
+        totalPrice += Number(product.price) * Number(product.quantity);
+    })
+    totalPrice = totalPrice.toFixed(2);
+}
+
