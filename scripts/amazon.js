@@ -1,8 +1,6 @@
 import {cart} from '../data/cart.js';
 
 
-renderProducts();
-
 function renderProducts(){
     let productHTML = document.querySelector('.js-product-grid');
     let renderHTML = '';
@@ -89,7 +87,7 @@ function addToCart(){
 }
 
 function totalQuantity(){
-    cartQuantityDisplay = document.querySelector('.js-cart-quantity');
+    const cartQuantityDisplay = document.querySelector('.js-cart-quantity');  // line 91
     let totalQuantity = 0;
 
     cart.forEach((product) => {
@@ -97,8 +95,8 @@ function totalQuantity(){
     })
 
     cartQuantityDisplay.innerHTML = totalQuantity;
-
 }
+
 
 function totalPrice(){
     let totalPrice = 0;
@@ -109,3 +107,4 @@ function totalPrice(){
     totalPrice = totalPrice.toFixed(2);
 }
 
+renderProducts();
