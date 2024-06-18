@@ -1,9 +1,9 @@
-import { cart } from "../data/cart.js";
+import { cart, deleteCartItem } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { moneyCurrency } from './utils/money.js';
 
-
 renderOrder();
+
 function renderOrder(){
     let renderContainer = document.querySelector('.js-order-container');
     let cartHTML = '';
@@ -18,7 +18,8 @@ function renderOrder(){
         })
 
         cartHTML += `
-            <div class="cart-item-container js-cart-container">
+            <div class="cart-item-container js-cart-container 
+            js-container-${matchedProduct.id}">
             <div class="delivery-date">
               Delivery date: Tuesday, June 21
             </div>
@@ -41,7 +42,7 @@ function renderOrder(){
                   <span class="update-quantity-link link-primary">
                     Update
                   </span>
-                  <span class="delete-quantity-link link-primary">
+                  <span class="delete-quantity-link link-primary js-delete-button" data-item-id=${matchedProduct.id}>
                     Delete
                   </span>
                 </div>
@@ -95,6 +96,20 @@ function renderOrder(){
           </div>
         `
     })
-    console.log(cartHTML);
     renderContainer.innerHTML = cartHTML;
 }
+
+
+let deleteButtonsSelector = document.querySelectorAll('.js-delete-button');
+
+deleteButtonsSelector.forEach((button) => {
+  button.addEventListener('click', () => {
+    let itemId = button.dataset.itemId;
+    deleteCartItem(itemId);
+
+    let containerToDelete = document.querySelector(`.js-container-${itemId}`)
+    console.log(containerToDelete);
+    containerToDelete.remove();
+
+  })
+})

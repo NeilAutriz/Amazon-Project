@@ -1,4 +1,4 @@
-export const cart = [{
+export let cart = [{
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     quantity: 2, 
     price: 1090
@@ -35,4 +35,14 @@ function totalCartPrice(){
         totalCartPrice += Number(currentCartProduct.price) * Number(currentCartProduct.quantity);
     })
     totalCartPrice = totalCartPrice.toFixed(2);
+}
+
+export function deleteCartItem(itemIdDelete){
+    let newCart = [];
+    cart.forEach((item) => {
+        if(item.id !== itemIdDelete){
+            newCart.push(item);
+        }
+    });
+    cart = newCart;
 }
