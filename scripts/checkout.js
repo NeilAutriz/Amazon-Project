@@ -1,7 +1,9 @@
 import { cart, deleteCartItem } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { moneyCurrency } from './utils/money.js';
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 
+console.log(dayjs());
 renderOrder();
 
 function renderOrder(){
