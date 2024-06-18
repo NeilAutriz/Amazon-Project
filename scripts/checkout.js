@@ -97,19 +97,18 @@ function renderOrder(){
         `
     })
     renderContainer.innerHTML = cartHTML;
+    deleteEventListener();
 }
 
+function deleteEventListener(){
+  let deleteButtonsSelector = document.querySelectorAll('.js-delete-button');
+  deleteButtonsSelector.forEach((button) => {
+    button.addEventListener('click', () => {
+      let itemId = button.dataset.itemId;
+      deleteCartItem(itemId);
 
-let deleteButtonsSelector = document.querySelectorAll('.js-delete-button');
-
-deleteButtonsSelector.forEach((button) => {
-  button.addEventListener('click', () => {
-    let itemId = button.dataset.itemId;
-    deleteCartItem(itemId);
-
-    let containerToDelete = document.querySelector(`.js-container-${itemId}`)
-    console.log(containerToDelete);
-    containerToDelete.remove();
-
+      let containerToDelete = document.querySelector(`.js-container-${itemId}`)
+      containerToDelete.remove();
+    })
   })
-})
+}
