@@ -89,3 +89,4 @@ function updateCartQuantity(){
 }
 
 renderProducts();
+
