@@ -1,144 +1,77 @@
-import { cart, deleteCartItem, updateDeliveryOption } from "../../data/cart.js";
-import { products } from "../../data/products.js";
-import { moneyCurrency } from '../utils/money.js';
-import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { delivery } from "../../data/delivery.js";
+import {cart, totalCartPrice} from '../../data/cart.js'
+import {moneyCurrency} from '../utils/money.js'
+import {delivery} from '../../data/delivery.js'
 
-function deliveryOptions(matchedProduct, cartItem){
-  let deliveryHTML = '';
+export function renderSummary(){
+  let summarySelector = document.querySelector('.js-order-summary');
+  let totalSummary = totalCartPrice();
+  let totalShipping = totalShippingCost();
+  let totalNoTax = (Number(totalSummary) + Number(totalShipping)).toFixed(2);
+  let estimatedTax = (Number(totalNoTax) * 0.10).toFixed(2); 
+  let totalPrice = (Number(totalNoTax) + Number(estimatedTax)).toFixed(2);
 
-  delivery.forEach((deliveryOption) => {
-    let today = dayjs();
-    let deliveryDate = today.add(deliveryOption.deliveryDay, 'days');
-    let deliveryFormat = deliveryDate.format('dddd, MMMM D');
+  summarySelector.innerHTML = `
+    <div class="payment-summary-title">
+      Order Summary
+    </div>
 
-    let deliveryCost;
-    if(deliveryOption.deliveryFee === 0){
-      deliveryCost = 'FREE';
-    } else {
-      deliveryCost = `${deliveryOption.deliveryFee}`;
-      deliveryCost = '$' + moneyCurrency(deliveryCost);
-    }
+    <div class="payment-summary-row">
+      <div>Items (3):</div>
+      <div class="payment-summary-money">$${totalSummary}</div>
+    </div>
 
-    let isChecked = String(deliveryOption.deliveryId) === String(cartItem.deliveryId);
+    <div class="payment-summary-row">
+      <div>Shipping &amp; handling:</div>
+      <div class="payment-summary-money">$${totalShipping}</div>
+    </div>
 
-    deliveryHTML +=` 
-      <div class="delivery-option js-delivery-radio"
-      data-delivery-id="${deliveryOption.deliveryId}"
-      data-product-id="${matchedProduct.id}">
-        <input type="radio"
-          ${isChecked ? 'checked': ''} 
-          class="delivery-option-input"
-          name="delivery-option-${matchedProduct.id}">
-        <div>
-          <div class="delivery-option-date">
-            ${deliveryFormat}
-          </div>
-          <div class="delivery-option-price">
-            ${deliveryCost}
-          </div>
-        </div>
-      </div>
-    `;
+    <div class="payment-summary-row subtotal-row">
+      <div>Total before tax:</div>
+      <div class="payment-summary-money">$${totalNoTax}</div>
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Estimated tax (10%):</div>
+      <div class="payment-summary-money">$${estimatedTax}</div>
+    </div>
+
+    <div class="payment-summary-row total-row">
+      <div>Order total:</div>
+      <div class="payment-summary-money">$${totalPrice}</div>
+    </div>
+
+    <button class="place-order-button button-primary">
+      Place your order
+    </button>
+  `;
+
+
+  let placeOrderButton = summarySelector.querySelector('.place-order-button');
+  placeOrderButton.addEventListener('click', () => {
+    // Recalculate and re-render summary on button click
+    renderSummary();
   });
-
-  return deliveryHTML;
 }
 
-function renderOrder(){
-  let renderContainer = document.querySelector('.js-order-container');
-  let cartHTML = '';
-  let deliveryDate = renderDate();
-  
+function totalShippingCost(){
+  let totalShipping = 0;
   cart.forEach((item) => {
-    let matchedProduct;
-
-    products.forEach((product) => {
-      if(product.id === item.id){
-        matchedProduct = product;
+    let cartDeliveryId = item.deliveryId
+    let foundItem;
+    delivery.forEach((item) => {
+      if(cartDeliveryId === item.deliveryId){
+        foundItem = item;
       }
-    });
+    })
 
-    cartHTML += `
-      <div class="cart-item-container js-cart-container 
-      js-container-${matchedProduct.id}">
-        <div class="delivery-date">
-          Delivery date: ${renderDate(item.deliveryId)}
-        </div>
-
-        <div class="cart-item-details-grid">
-          <img class="product-image" src=${matchedProduct.image}>
-
-          <div class="cart-item-details">
-            <div class="product-name">
-              ${matchedProduct.name}
-            </div>
-            <div class="product-price">
-              $${moneyCurrency(matchedProduct.priceCents)}
-            </div>
-            <div class="product-quantity">
-              <span>
-                Quantity: <span class="quantity-label">${item.quantity}</span>
-              </span>
-              <span class="update-quantity-link link-primary">
-                Update
-              </span>
-              <span class="delete-quantity-link link-primary js-delete-button" data-item-id=${matchedProduct.id}>
-                Delete
-              </span>
-            </div>
-          </div>
-
-          <div class="delivery-options">
-            <div class="delivery-options-title">
-              Choose a delivery option:
-            </div>
-            ${deliveryOptions(matchedProduct, item)}
-          </div>
-        </div>
-      </div>
-    `;
-  });
-  renderContainer.innerHTML = cartHTML;
-  setupEventListeners(); 
-}
-
-function renderDate(cartDeliveryId) {
-  let deliveryOption;
-  delivery.forEach((option) => {
-    if(option.deliveryId === cartDeliveryId){
-      deliveryOption = option;
+    if(foundItem){
+      totalShipping = totalShipping + foundItem.deliveryFee
     }
-  });
-  if (deliveryOption) {
-    let today = dayjs();
-    let deliveryDate = today.add(deliveryOption.deliveryDay, 'days');
-    return deliveryDate.format('dddd, MMMM D');
-  }
-  return '';
+
+  })
+  totalShipping = moneyCurrency(totalShipping);
+  return totalShipping;
 }
 
-function setupEventListeners() {
-  // Event listener for delete buttons
-  let deleteButtonsSelector = document.querySelectorAll('.js-delete-button');
-  deleteButtonsSelector.forEach((button) => {
-    button.addEventListener('click', () => {
-      let itemId = button.dataset.itemId;
-      deleteCartItem(itemId);
-      renderOrder(); // Re-render after deleting an item
-    });
-  });
+renderSummary();
 
-  // Event listener for radio buttons (delivery options)
-  let radioSelector = document.querySelectorAll('.js-delivery-radio');
-  radioSelector.forEach((button) => {
-    button.addEventListener('click', () => {
-      let deliveryId = button.dataset.deliveryId;
-      let productId = button.dataset.productId;
-      updateDeliveryOption(productId, deliveryId);
-      renderOrder(); // Re-render after updating delivery option
-    });
-  });
-}
-
-renderOrder();

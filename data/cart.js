@@ -42,13 +42,14 @@ export function pushToCart(cartProductId, cartProductPrice){
     saveCart();
 }
 
-function totalCartPrice(){
+export function totalCartPrice(){
     let totalCartPrice = 0;
 
     cart.forEach((currentCartProduct) => {
         totalCartPrice += Number(currentCartProduct.price) * Number(currentCartProduct.quantity);
     })
     totalCartPrice = totalCartPrice.toFixed(2);
+    return totalCartPrice;
 }
 
 export function deleteCartItem(itemIdDelete){
