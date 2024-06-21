@@ -4,8 +4,6 @@ import { moneyCurrency } from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { delivery } from "../data/delivery.js";
 
-
-renderOrder();
 function deliveryOptions(matchedProduct, cartItem){
   let deliveryHTML = '';
 
@@ -102,20 +100,7 @@ function renderOrder(){
     `;
   });
   renderContainer.innerHTML = cartHTML;
-  deleteEventListener();
-}
-
-function deleteEventListener(){
-  let deleteButtonsSelector = document.querySelectorAll('.js-delete-button');
-  deleteButtonsSelector.forEach((button) => {
-    button.addEventListener('click', () => {
-      let itemId = button.dataset.itemId;
-      deleteCartItem(itemId);
-
-      let containerToDelete = document.querySelector(`.js-container-${itemId}`);
-      containerToDelete.remove();
-    });
-  });
+  setupEventListeners(); 
 }
 
 function renderDate(cartDeliveryId) {
@@ -130,21 +115,30 @@ function renderDate(cartDeliveryId) {
     let deliveryDate = today.add(deliveryOption.deliveryDay, 'days');
     return deliveryDate.format('dddd, MMMM D');
   }
-
-
   return '';
 }
 
-function radioEventListener(){
+function setupEventListeners() {
+  // Event listener for delete buttons
+  let deleteButtonsSelector = document.querySelectorAll('.js-delete-button');
+  deleteButtonsSelector.forEach((button) => {
+    button.addEventListener('click', () => {
+      let itemId = button.dataset.itemId;
+      deleteCartItem(itemId);
+      renderOrder(); // Re-render after deleting an item
+    });
+  });
+
+  // Event listener for radio buttons (delivery options)
   let radioSelector = document.querySelectorAll('.js-delivery-radio');
   radioSelector.forEach((button) => {
     button.addEventListener('click', () => {
       let deliveryId = button.dataset.deliveryId;
       let productId = button.dataset.productId;
-      console.log(deliveryId, productId);
       updateDeliveryOption(productId, deliveryId);
-    })
-  })
-  
+      renderOrder(); // Re-render after updating delivery option
+    });
+  });
 }
-radioEventListener()
+
+renderOrder();
