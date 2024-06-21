@@ -1,8 +1,8 @@
-import { cart, deleteCartItem, updateDeliveryOption } from "../data/cart.js";
-import { products } from "../data/products.js";
-import { moneyCurrency } from './utils/money.js';
+import { cart, deleteCartItem, updateDeliveryOption } from "../../data/cart.js";
+import { products } from "../../data/products.js";
+import { moneyCurrency } from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { delivery } from "../data/delivery.js";
+import { delivery } from "../../data/delivery.js";
 
 function deliveryOptions(matchedProduct, cartItem){
   let deliveryHTML = '';

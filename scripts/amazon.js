@@ -78,7 +78,7 @@ function addButton(){
 }
 
 function updateCartQuantity(){
-    const cartQuantityDisplay = document.querySelector('.js-cart-quantity');  // line 91
+    const cartQuantityDisplay = document.querySelector('.js-cart-quantity');  
     let updateCartQuantity = 0;
 
     cart.forEach((currentCartProduct) => {
