@@ -1,4 +1,4 @@
-import { cart, deleteCartItem } from "../data/cart.js";
+import { cart, deleteCartItem, updateDeliveryOption } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { moneyCurrency } from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
@@ -25,7 +25,9 @@ function deliveryOptions(matchedProduct, cartItem){
     let isChecked = String(deliveryOption.deliveryId) === String(cartItem.deliveryId);
 
     deliveryHTML +=` 
-      <div class="delivery-option">
+      <div class="delivery-option js-delivery-radio"
+      data-delivery-id="${deliveryOption.deliveryId}"
+      data-product-id="${matchedProduct.id}">
         <input type="radio"
           ${isChecked ? 'checked': ''} 
           class="delivery-option-input"
@@ -44,7 +46,6 @@ function deliveryOptions(matchedProduct, cartItem){
 
   return deliveryHTML;
 }
-
 
 function renderOrder(){
   let renderContainer = document.querySelector('.js-order-container');
@@ -117,15 +118,33 @@ function deleteEventListener(){
   });
 }
 
-
 function renderDate(cartDeliveryId) {
-  let deliveryOption = delivery.find(option => option.deliveryId === cartDeliveryId);
-
+  let deliveryOption;
+  delivery.forEach((option) => {
+    if(option.deliveryId === cartDeliveryId){
+      deliveryOption = option;
+    }
+  });
   if (deliveryOption) {
     let today = dayjs();
     let deliveryDate = today.add(deliveryOption.deliveryDay, 'days');
     return deliveryDate.format('dddd, MMMM D');
   }
 
-  return ''; // Return empty string if no delivery option found
+
+  return '';
 }
+
+function radioEventListener(){
+  let radioSelector = document.querySelectorAll('.js-delivery-radio');
+  radioSelector.forEach((button) => {
+    button.addEventListener('click', () => {
+      let deliveryId = button.dataset.deliveryId;
+      let productId = button.dataset.productId;
+      console.log(deliveryId, productId);
+      updateDeliveryOption(productId, deliveryId);
+    })
+  })
+  
+}
+radioEventListener()

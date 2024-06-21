@@ -61,3 +61,18 @@ export function deleteCartItem(itemIdDelete){
     cart = newCart;
     saveCart();
 }
+
+export function updateDeliveryOption(productId, deliveryOptionId){
+    let foundProduct;
+
+    cart.forEach((item) => {
+        if(productId === item.id){
+            foundProduct = item;
+        }
+    })  
+
+    if (foundProduct) {
+        foundProduct.deliveryId = deliveryOptionId;
+    }
+    saveCart();
+}
