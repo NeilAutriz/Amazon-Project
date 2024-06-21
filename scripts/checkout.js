@@ -6,8 +6,6 @@ import { delivery } from "../data/delivery.js";
 
 
 renderOrder();
-
-
 function deliveryOptions(matchedProduct, cartItem){
   let deliveryHTML = '';
 
@@ -25,8 +23,6 @@ function deliveryOptions(matchedProduct, cartItem){
     }
 
     let isChecked = String(deliveryOption.deliveryId) === String(cartItem.deliveryId);
-
-    console.log(`deliveryOption.deliveryId: ${deliveryOption.deliveryId}, cartItem.deliveryId: ${cartItem.deliveryId}, isChecked: ${isChecked}`);
 
     deliveryHTML +=` 
       <div class="delivery-option">
@@ -53,6 +49,7 @@ function deliveryOptions(matchedProduct, cartItem){
 function renderOrder(){
   let renderContainer = document.querySelector('.js-order-container');
   let cartHTML = '';
+  let deliveryDate = renderDate();
   
   cart.forEach((item) => {
     let matchedProduct;
@@ -67,7 +64,7 @@ function renderOrder(){
       <div class="cart-item-container js-cart-container 
       js-container-${matchedProduct.id}">
         <div class="delivery-date">
-          Delivery date: Tuesday, June 21
+          Delivery date: ${renderDate(item.deliveryId)}
         </div>
 
         <div class="cart-item-details-grid">
@@ -118,4 +115,17 @@ function deleteEventListener(){
       containerToDelete.remove();
     });
   });
+}
+
+
+function renderDate(cartDeliveryId) {
+  let deliveryOption = delivery.find(option => option.deliveryId === cartDeliveryId);
+
+  if (deliveryOption) {
+    let today = dayjs();
+    let deliveryDate = today.add(deliveryOption.deliveryDay, 'days');
+    return deliveryDate.format('dddd, MMMM D');
+  }
+
+  return ''; // Return empty string if no delivery option found
 }
