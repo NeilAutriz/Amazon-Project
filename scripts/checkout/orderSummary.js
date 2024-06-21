@@ -2,6 +2,7 @@ import {cart, totalCartPrice} from '../../data/cart.js'
 import {moneyCurrency} from '../utils/money.js'
 import {delivery} from '../../data/delivery.js'
 
+
 export function renderSummary(){
   let summarySelector = document.querySelector('.js-order-summary');
   let totalSummary = totalCartPrice();
@@ -48,7 +49,6 @@ export function renderSummary(){
 
   let placeOrderButton = summarySelector.querySelector('.place-order-button');
   placeOrderButton.addEventListener('click', () => {
-    // Recalculate and re-render summary on button click
     renderSummary();
   });
 }
