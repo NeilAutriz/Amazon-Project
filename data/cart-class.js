@@ -1,14 +1,14 @@
 class Cart{
     cartItems;
-    localStorageKey;
+    #localStorageKey;
 
     constructor(localStorageKey){
-        this.localStorageKey = localStorageKey;
-        this.loadCart();
+        this.#localStorageKey = localStorageKey;
+        this.#loadCart();
     }
 
-    loadCart(){
-        this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey)) || [];
+    #loadCart(){
+        this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
     
         if (this.cartItems.length === 0) {
             alert('Cart is null or empty, initializing with default values');
@@ -30,11 +30,11 @@ class Cart{
     }
 
     saveCart(){
-        localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+        localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
     }
 
     pushToCart(cartProductId, cartProductPrice){
-        this.loadCart();
+        this.#loadCart();
         let addedProduct;
         this.cartItems.forEach((currentCartProduct) => {
             if(currentCartProduct.id === cartProductId){
@@ -92,3 +92,6 @@ class Cart{
 
 let businessCart = new Cart('business-cart');
 let schoolCart = new Cart('school-cart');
+
+console.log(businessCart);
+console.log(schoolCart);
