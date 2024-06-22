@@ -76,7 +76,7 @@ export function renderOrder(){
               ${matchedProduct.name}
             </div>
             <div class="product-price">
-              $${moneyCurrency(matchedProduct.priceCents)}
+              ${matchedProduct.getPrice()}
             </div>
             <div class="product-quantity">
               <span>

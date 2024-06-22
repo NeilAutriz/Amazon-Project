@@ -11,7 +11,6 @@ class Cart{
         this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
     
         if (this.cartItems.length === 0) {
-            alert('Cart is null or empty, initializing with default values');
             this.cartItems = [
                 {
                     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
