@@ -1,4 +1,4 @@
-import {moneyCurrency} from '../scripts/utils/money.js'
+import {moneyCurrency} from '../../scripts/utils/money.js'
 
 describe('Test Suite: Money Currency', () => {
     it('Converts the Centavos into Peso', () => {

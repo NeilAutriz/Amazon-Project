@@ -1,36 +1,45 @@
 import { delivery } from "./delivery.js";
 
-export let cart = JSON.parse(localStorage.getItem('cart')) || [];
+export let cart; 
+loadCart();
 
-if (!cart) {
-    alert('Cart is null or empty, initializing with default values');
-    cart = [
-        {
-            id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-            quantity: 2,
-            price: 1090,
-            deliveryId: '1'
-        },
-        {
-            id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
-            quantity: 1,
-            price: 2095,
-            deliveryId: '2'
-        }
-    ];
+export function loadCart(){
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (cart.length === 0) {
+        alert('Cart is null or empty, initializing with default values');
+        cart = [
+            {
+                id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+                quantity: 2,
+                price: 1090,
+                deliveryId: '1'
+            },
+            {
+                id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+                quantity: 1,
+                price: 2095,
+                deliveryId: '2'
+            }
+        ];
+    }
+    return cart; 
 }
+
 
 function saveCart(){
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 export function pushToCart(cartProductId, cartProductPrice){
+    loadCart();
     let addedProduct;
     cart.forEach((currentCartProduct) => {
         if(currentCartProduct.id === cartProductId){
             addedProduct = currentCartProduct;
         }
     })
+    
     if(addedProduct){
         addedProduct.quantity++;
     } else {
