@@ -84,17 +84,5 @@ function CreateCart(localStoragekey){
             this.saveCart();
         }
     }
-
     return cart;
 }
-
-const schoolCart = CreateCart('school-oop');
-const businessCart = CreateCart('business-oop');
-
-schoolCart.loadCart();
-businessCart.loadCart();
-
-businessCart.pushToCart("3ebe75dc-64d2-4137-8860-1f5a963e534b", 2067);
-
-console.log(schoolCart);
-console.log(businessCart);
