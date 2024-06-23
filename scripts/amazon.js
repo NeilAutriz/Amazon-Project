@@ -4,7 +4,6 @@ import { moneyCurrency } from './utils/money.js';
 
 loadProducts(renderGrid);
 
-
 function renderGrid(){
     function renderProducts(){
         let productHTML = document.querySelector('.js-product-grid');
