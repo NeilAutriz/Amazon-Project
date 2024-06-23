@@ -58,8 +58,9 @@ export function loadProductsFetch(){
         return new Product(productDetails);
       }
     })
-    console.log(products);
-  })
+  }).catch((error) => {
+    console.log(`Error is detected: ${error}`);
+  });
 
   return promise;
 }
@@ -82,6 +83,10 @@ export function loadProducts(func) {
       func(); // Ensure func is a function before calling it
     }
     
+  });
+
+  xhr.addEventListener('error', () => {
+    console.log('Error is detected.');
   });
 
   xhr.open('GET', 'https://supersimplebackend.dev/products');
